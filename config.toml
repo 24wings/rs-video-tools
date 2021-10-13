@@ -1,0 +1,5 @@
+# mov 文件夹
+mov_dir="mov_dir"
+wav_dir="wav_dir"
+# 输出目录文件夹
+dist_dr="dist_dir"

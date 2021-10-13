@@ -1,0 +1,42 @@
+let fs=require('fs')
+// let dirname=__dir;
+let outputDir=`P:\\Other_Project\\Other\\editing\\剪辑练习\\editing\\工程\\2021\\阴阳师-富岳\\输出\\1013\\output`;
+ class MvPair{
+     movFilePath;
+     wavFilePath;
+     outputPath
+
+ }
+
+let soureMovDir=`P:\\Other_Project\\Other\\editing\\剪辑练习\\editing\\工程\\2021\\阴阳师-富岳\\输出\\1013\\FY单CUT分镜0930\\MOV`;
+let soureWavDir=`P:\\Other_Project\\Other\\editing\\剪辑练习\\editing\\工程\\2021\\阴阳师-富岳\\输出\\1013\\FY单CUT分镜0930\\WAV`;
+let movFiles= fs.readdirSync(soureMovDir);
+let data=[]
+console.log(JSON.stringify(movFiles));
+movFiles.forEach(moveFile=>{
+    let moveFilename=moveFile.split(".")[0];
+    // console.log(moveFilename)
+    if(fs.existsSync(soureWavDir+"\\"+moveFilename+".wav")){
+        let pair= new MvPair();
+        pair.movFilePath=soureMovDir+"\\"+moveFilename+".mov";
+        pair.wavFilePath=soureWavDir+"\\"+moveFilename+".wav";
+        pair.outputPath=outputDir+"\\"+moveFilename+".mkv"
+        data.push(pair)
+    }else{
+        console.log(`not exsit`+soureWavDir+"\\"+moveFilename+".wav")
+    }
+});
+console.log(`总共找到配对文件:`+data.length);
+// console.log(JSON.stringify(data))
+
+let cmd= data.map(i=>getCommand(i.movFilePath,i.wavFilePath,i.outputPath)).join("\r\n");
+fs.writeFileSync("shell.ps1",cmd,{encoding:'utf-8'})
+
+
+
+// let command=`
+// "C:\Users\panbin\Desktop\mkvtoolnix\mkvmerge.exe" -o "C:\\Users\\panbin\\Desktop\\output\\sc001.mkv"  "--forced-track" "0:no" "-d" "0" "-A" "-S" "-T" "--no-global-tags" "--no-chapters" "(" "C:\\Users\\panbin\\Desktop\\FY单CUT分镜0930\\MOV\\sc001.mov" ")" "--forced-track" "0:no" "-a" "0" "-D" "-S" "-T" "--no-global-tags" "--no-chapters" "(" "C:\\Users\\panbin\\Desktop\\FY单CUT分镜0930\\WAV\\sc001.wav" ")" "--track-order" "0:0,1:0"`
+
+
+function getCommand(sourceMovFile,sourcWavFile,distFile){
+ return    `"P:\\Other_Project\\Other\\editing\\剪辑练习\\editing\\工程\\2021\\阴阳师-富岳\\输出\\1013\\mkvtoolnix\\mkvmerge.exe"  -o ${distFile}  "--forced-track" "0:no" "-d" "0" "-A" "-S" "-T" "--no-global-tags" "--no-chapters" "(" "${sourceMovFile}" ")" "--forced-track" "0:no" "-a" "0"
